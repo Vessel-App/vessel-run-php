@@ -1,6 +1,5 @@
 # syntax = docker/dockerfile:1.4
 
-# TODO: Replace this with base container
 FROM vesselapp/base:latest
 
 ARG PHP_VERSION=8.1
@@ -43,5 +42,7 @@ RUN echo "Set disable_coredump false" >> /etc/sudo.conf \
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 COPY docker/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
-RUN apt-get clean autoclean \
+RUN sed -i "s/8.1/${PHP_VERSION}/g" /etc/nginx/sites-available/default \
+    && sed -i "s/8.1/${PHP_VERSION}/g" /etc/supervisor/conf.d/supervisor.conf \
+    && apt-get clean autoclean \
 	&& apt-get autoremove --yes
